@@ -1,2 +1,2 @@
-# SCOUT
-[ Smart Commerce and Omnichannel Unified Tracker ]
+# SCOUT [Smart Commerce and Omnichannel Unified Tracker]
+
