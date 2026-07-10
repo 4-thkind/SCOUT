@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🔍 SCOUT
+# SCOUT
 ### Smart Commerce & Omnichannel Unified Tracker
 
 **One query. Every platform. Best pick.**
