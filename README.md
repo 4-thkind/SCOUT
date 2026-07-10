@@ -1,4 +1,4 @@
-# Universal Commerce Agent — Backend Model
+# SCOUT [Smart Commerce and Omnichannel Unified Tracker]
 
 > AI-powered cross-platform shopping assistant for India.  
 > Searches Amazon, Flipkart, Blinkit, Zepto, Instamart, Myntra & Ajio simultaneously,  
