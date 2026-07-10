@@ -84,6 +84,31 @@ class SerpAPIIntegration(BaseIntegration):
         return " ".join(parts)
 
     @staticmethod
+    def _infer_platform(source: Optional[str]) -> Platform:
+        if not source:
+            return Platform.SERP
+        src_lower = source.lower()
+        if "amazon" in src_lower:
+            return Platform.AMAZON
+        if "flipkart" in src_lower:
+            return Platform.FLIPKART
+        if "myntra" in src_lower:
+            return Platform.MYNTRA
+        if "ajio" in src_lower:
+            return Platform.AJIO
+        if "nykaa" in src_lower:
+            return Platform.NYKAA
+        if "blinkit" in src_lower:
+            return Platform.BLINKIT
+        if "zepto" in src_lower:
+            return Platform.ZEPTO
+        if "instamart" in src_lower or "swiggy" in src_lower:
+            return Platform.INSTAMART
+        if "zomato" in src_lower:
+            return Platform.ZOMATO
+        return Platform.SERP
+
+    @staticmethod
     def _parse_item(item: dict) -> Product:
         raw_price = item.get("price", "0")
         # SerpAPI returns prices like "₹2,999" or "$29.99"
@@ -91,15 +116,16 @@ class SerpAPIIntegration(BaseIntegration):
             raw_price.replace("₹", "").replace(",", "").replace("$", "").strip()
             or "0"
         )
+        source = item.get("source")
         return Product(
             product_id=item.get("product_id") or str(uuid.uuid4()),
             title=item.get("title", "Unknown Product"),
-            platform=Platform.SERP,
+            platform=SerpAPIIntegration._infer_platform(source),
             platform_type=PlatformType.ECOMMERCE,
             price=PriceInfo(current=price_val),
             image_url=item.get("thumbnail"),
-            product_url=item.get("link", "#"),
-            brand=item.get("source"),
+            product_url=item.get("product_link", "#"),
+            brand=source,
             review_summary=ReviewSummary(
                 average_rating=float(item["rating"]) if item.get("rating") else None,
                 total_reviews=item.get("reviews"),

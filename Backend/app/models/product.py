@@ -111,10 +111,15 @@ class ProductCard(BaseModel):
         orig_display = (
             f"₹{p.price.original:,.0f}" if p.price.original else None
         )
+        
+        display_platform = p.platform.value
+        if p.platform == Platform.SERP and p.brand:
+            display_platform = p.brand
+
         return cls(
             product_id=p.product_id,
             title=p.title,
-            platform=p.platform.value,
+            platform=display_platform,
             price_display=price_display,
             original_price_display=orig_display,
             discount_pct=p.price.discount_pct,
