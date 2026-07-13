@@ -64,7 +64,7 @@ class ProductRanker:
 
         for product in products:
             score, breakdown = self._score(product, budget_min, budget_max, weights)
-            product.score = round(score, 3)
+            product.score = round(score * 100, 1)
             product.score_breakdown = {k: round(v, 3) for k, v in breakdown.items()}
 
         ranked = sorted(products, key=lambda p: p.score or 0, reverse=True)
