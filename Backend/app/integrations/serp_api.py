@@ -109,6 +109,44 @@ class SerpAPIIntegration(BaseIntegration):
         return Platform.SERP
 
     @staticmethod
+    def _generate_fallback_url(source: Optional[str], title: str) -> Optional[str]:
+        if not source or not title:
+            return None
+            
+        import urllib.parse
+        src_lower = source.lower()
+        title_encoded = urllib.parse.quote(title)
+        
+        # Explicit store search mappings
+        if "amazon" in src_lower:
+            return f"https://www.amazon.in/s?k={title_encoded}"
+        if "flipkart" in src_lower:
+            return f"https://www.flipkart.com/search?q={title_encoded}"
+        if "ubuy" in src_lower:
+            return f"https://www.ubuy.co.in/search/?q={title_encoded}"
+        if "reliance" in src_lower:
+            return f"https://www.reliancedigital.in/search?q={title_encoded}:relevance"
+        if "croma" in src_lower:
+            return f"https://www.croma.com/search/?q={title_encoded}:relevance:isStockAvailable:true"
+        if "vijay sales" in src_lower:
+            return f"https://www.vijaysales.com/search/{title_encoded}"
+        if "desertcart" in src_lower:
+            return f"https://www.desertcart.in/search/{title_encoded}"
+        if "tradeindia" in src_lower:
+            return f"https://www.tradeindia.com/search.html?keyword={title_encoded}"
+        
+        # If the source is just one word or a domain like "ZOZILA.COM" or "SCOFFCO"
+        domain = source.strip().lower()
+        if " " not in domain:
+            if "." not in domain:
+                domain += ".com"  # guess .com if missing
+            return f"https://{domain}/search?q={title_encoded}"
+            
+        # Final fallback: A standard Google Search (bypasses Google Shopping overlay)
+        source_encoded = urllib.parse.quote(source)
+        return f"https://www.google.com/search?q={source_encoded}+{title_encoded}"
+
+    @staticmethod
     def _parse_item(item: dict) -> Product:
         raw_price = item.get("price", "0")
         # SerpAPI returns prices like "₹2,999" or "$29.99"
@@ -124,7 +162,7 @@ class SerpAPIIntegration(BaseIntegration):
             platform_type=PlatformType.ECOMMERCE,
             price=PriceInfo(current=price_val),
             image_url=item.get("thumbnail"),
-            product_url=item.get("product_link", "#"),
+            product_url=item.get("link") or SerpAPIIntegration._generate_fallback_url(source, item.get("title", "")) or item.get("product_link", "#"),
             brand=source,
             review_summary=ReviewSummary(
                 average_rating=float(item["rating"]) if item.get("rating") else None,
