@@ -1,5 +1,6 @@
 /* ──────────────────────────────────────────────
    SCOUT — script.js
+   Ferrari Design System
 ────────────────────────────────────────────── */
 
 /* Scroll reveal using IntersectionObserver */
@@ -40,7 +41,7 @@ function initChat() {
     
     // 1. Add user message
     const userMsg = document.createElement('div');
-    userMsg.className = 'msg-user btn-cap';
+    userMsg.className = 'msg-user';
     userMsg.textContent = message;
     chatBody.appendChild(userMsg);
     
@@ -98,7 +99,7 @@ function initChat() {
       console.error('Chat request failed:', err);
       const errorMsg = document.createElement('div');
       errorMsg.className = 'ai-reply body-md';
-      errorMsg.style.color = 'var(--accent-warn)';
+      errorMsg.style.color = 'var(--primary)';
       errorMsg.textContent = 'Error connecting to the backend API.';
       chatBody.appendChild(errorMsg);
     } finally {
@@ -117,12 +118,12 @@ function handleEvent(type, payload, thinkingRow, aiReply, chatBody) {
   
   if (type === 'thinking' || type === 'intent') {
     const badge = document.createElement('div');
-    badge.className = 'thinking-badge micro-cap';
+    badge.className = 'thinking-badge';
     badge.innerHTML = `
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
         <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
       </svg>
-      ${type === 'intent' ? 'Parsed intent' : (data.message || 'Thinking...')}
+      ${type === 'intent' ? 'PARSED INTENT' : (data.message || 'THINKING...')}
     `;
     thinkingRow.appendChild(badge);
   } 
@@ -157,7 +158,7 @@ function handleEvent(type, payload, thinkingRow, aiReply, chatBody) {
               </div>
               <div class="product-meta">
                 <span class="product-stars">${stars}</span> ${rating ? rating.toFixed(1) : 'N/A'}
-                <span style="margin-left:auto" class="product-delivery">▸ ${p.delivery_label || 'Standard'}</span>
+                <span style="margin-left:auto" class="product-delivery">▸ ${(p.delivery_label || 'STANDARD').toUpperCase()}</span>
               </div>
             </div>
           </a>
