@@ -38,7 +38,7 @@ async def lifespan(app: FastAPI):
     from app.tools.product_search import _ALL_PLATFORMS  # local import avoids cycle
 
     active = [p.platform.value for p in _ALL_PLATFORMS if p.enabled]
-    print("✅ Universal Commerce Agent started")
+    print("Universal Commerce Agent started")
     print(f"   Environment : {settings.app_env}")
     print(f"   LLM model   : {settings.llm_model}")
     if active:
@@ -50,7 +50,7 @@ async def lifespan(app: FastAPI):
         )
     yield
     # Cleanup (if needed)
-    print("🛑 Universal Commerce Agent shutting down")
+    print("Universal Commerce Agent shutting down")
 
 
 def create_app() -> FastAPI:
