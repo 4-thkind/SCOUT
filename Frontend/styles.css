@@ -239,7 +239,7 @@ img { display: block; max-width: 100%; }
   letter-spacing: 1px;
 }
 
-/* ── HERO BAND (cinematic) ── */
+/* ── HERO BAND (Octopus Mascot + Glass UI) ── */
 .hero {
   min-height: 100vh;
   display: flex;
@@ -247,22 +247,185 @@ img { display: block; max-width: 100%; }
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: calc(var(--sp-super) + 64px) var(--sp-lg) var(--sp-xxl);
+  padding: calc(var(--sp-super) + 40px) var(--sp-lg) calc(var(--sp-super) + 80px); /* Increased bottom padding to extend border line down */
   position: relative;
   overflow: hidden;
+  background: radial-gradient(circle at 50% 50%, rgba(124, 58, 237, 0.14) 0%, rgba(15, 15, 18, 1) 70%);
 }
-/* Cinematic red glow — subtle */
+
+/* Purple ambient glow behind octopus */
 .hero::before {
   content: '';
   position: absolute;
-  top: 30%;
+  top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 700px;
-  height: 500px;
-  background: radial-gradient(ellipse at center, rgba(218,41,28,0.06) 0%, transparent 70%);
+  width: 750px;
+  height: 550px;
+  background: radial-gradient(ellipse at center,
+    rgba(139, 92, 246, 0.25) 0%,
+    rgba(124, 58, 237, 0.12) 40%,
+    transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+  animation: glow-pulse 6s ease-in-out infinite alternate;
+}
+
+@keyframes glow-pulse {
+  0%   { opacity: 0.8; transform: translate(-50%, -50%) scale(1); }
+  100% { opacity: 1.0; transform: translate(-50%, -50%) scale(1.12); }
+}
+
+/* ── Octopus background layer ── */
+.hero-octopus-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: auto;
+}
+
+.octopus-wrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin-top: -60px; /* Shift the octopus up slightly */
+  z-index: 1;
   pointer-events: none;
 }
+
+.hero-octopus-img {
+  width: 850px;
+  max-width: 100vw;
+  height: auto;
+  opacity: 0.85;
+  filter: drop-shadow(0 0 35px rgba(139, 92, 246, 0.45));
+  animation: octo-float 7s ease-in-out infinite alternate;
+}
+
+@keyframes octo-float {
+  0%   { transform: translateY(0px) scale(1) rotate(0deg); }
+  50%  { transform: translateY(-10px) scale(1.02) rotate(1deg); }
+  100% { transform: translateY(8px) scale(0.99) rotate(-1deg); }
+}
+
+/* ── SVG tentacle lines ── */
+.tentacle-lines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* ── Solid Red Circular Platform Logo Badges ── */
+.platform-logo-node {
+  position: absolute;
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff2e2e 0%, #da291c 100%);
+  border: 3px solid #000000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 10px 28px rgba(218, 41, 28, 0.75),
+    0 0 25px rgba(255, 46, 46, 0.5);
+  animation: node-float 6s ease-in-out infinite alternate;
+  pointer-events: auto;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+  z-index: 5;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.platform-logo-node:hover {
+  transform: scale(1.18) translateY(-4px);
+  box-shadow:
+    0 16px 40px rgba(218, 41, 28, 0.95),
+    0 0 35px rgba(255, 46, 46, 0.8);
+}
+
+.logo-img-red {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.logo-img-red--cover {
+  object-fit: cover;
+  border-radius: 50%;
+  transform: scale(1.04); /* Slight scale up to eliminate any sub-pixel border gaps */
+}
+.logo-img-red--contain {
+  object-fit: contain;
+  padding: 10px;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.25));
+}
+
+.ajio-red-text {
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 15px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  color: #ffffff;
+}
+
+/* Removed absolute positioning - nodes now positioned via SVG foreignObject */
+.node-amazon    { animation-delay: 0s; }
+.node-flipkart  { animation-delay: -1s; }
+.node-myntra    { animation-delay: -2s; }
+.node-ajio      { animation-delay: -3s; }
+.node-ajio:hover{ transform: scale(1.18) translateY(-4px); }
+.node-zepto     { animation-delay: -0.5s; }
+.node-blinkit   { animation-delay: -1.5s; }
+.node-instamart { animation-delay: -2.5s; }
+
+@keyframes node-float {
+  0%   { transform: translateY(0px); }
+  100% { transform: translateY(-8px); }
+}
+
+/* ── Translucent Glassmorphism Hero Card ── */
+.hero-glass-card {
+  position: relative;
+  z-index: 10;
+  background: rgba(18, 18, 22, 0.35);
+  backdrop-filter: blur(14px) saturate(160%);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 24px;
+  padding: 48px 40px;
+  max-width: 680px;
+  margin-top: -60px; /* Shift the panel upwards to reveal Ajio logo */
+  box-shadow:
+    0 24px 64px rgba(0, 0, 0, 0.5),
+    0 0 50px rgba(124, 58, 237, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  animation: card-in 0.8s ease-out forwards;
+}
+
+@keyframes card-in {
+  0% {
+    opacity: 0;
+    transform: translateY(25px) scale(0.97);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.badge-pill--glass {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
 .hero-eyebrow {
   margin-bottom: var(--sp-sm);
 }
@@ -278,37 +441,19 @@ img { display: block; max-width: 100%; }
 .hero-sub {
   max-width: 580px;
   margin: 0 auto var(--sp-lg);
-  color: var(--body);
-  font-size: 16px;
-  font-weight: 400;
+  color: rgba(255, 255, 255, 0.95);
+  font-size: 17px;
+  font-weight: 500;
   line-height: 1.6;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.4);
 }
 .hero-actions {
   display: flex;
   gap: var(--sp-xs);
   flex-wrap: wrap;
   justify-content: center;
-  margin-bottom: var(--sp-xl);
 }
-.hero-platforms {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--sp-xxs);
-  justify-content: center;
-}
-.platform-chip {
-  display: inline-flex;
-  align-items: center;
-  background: var(--canvas-elevated);
-  color: var(--body);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 1.1px;
-  text-transform: uppercase;
-  border-radius: var(--r-full);
-  padding: 6px 14px;
-  border: 1px solid var(--hairline);
-}
+
 /* Scan line — red accent */
 .scan-bar {
   position: absolute;
@@ -690,17 +835,28 @@ img { display: block; max-width: 100%; }
   padding: var(--sp-xxl) var(--sp-lg);
 }
 .spec-cell {
-  padding: var(--sp-sm) 0;
-  border-top: 1px solid var(--hairline);
+  padding: var(--sp-lg);
+  background: rgba(18, 18, 22, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: var(--r-md);
   text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+.spec-cell:hover {
+  transform: translateY(-5px);
+  border-color: rgba(218, 41, 28, 0.3);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(218, 41, 28, 0.1);
 }
 .spec-value {
-  font-size: clamp(40px, 5vw, 80px);
-  font-weight: 700;
+  font-size: clamp(32px, 4vw, 56px);
+  font-weight: 800;
   line-height: 1;
-  letter-spacing: -1.6px;
-  color: var(--ink);
-  margin-bottom: var(--sp-xxs);
+  letter-spacing: -1px;
+  color: #ffffff;
+  margin-bottom: var(--sp-sm);
+  text-shadow: 0 2px 10px rgba(255,255,255,0.2);
 }
 .spec-label {
   font-size: 11px;
@@ -772,6 +928,21 @@ footer {
   .nav-links { display: none; }
   .nav { padding: 0 var(--sp-sm); }
   .hero { padding: calc(var(--sp-xl) + 64px) var(--sp-xs) var(--sp-lg); }
+  .hero-glass-card { padding: 32px 20px; margin: 0 var(--sp-xs); max-width: 92vw; }
+  .hero-octopus-img { width: 340px; opacity: 0.75; }
+  .platform-logo-node { width: 52px; height: 52px; padding: 4px; }
+  .brand-svg { width: 34px; }
+  .ajio-logo-text { font-size: 11px; }
+  .zepto-logo-text { font-size: 10px; }
+  .blinkit-badge { font-size: 9px; }
+  .instamart-badge { font-size: 6.5px; }
+  .node-amazon    { top: 4%;   left: 2%; }
+  .node-flipkart  { top: 22%;  left: 1%; }
+  .node-myntra    { top: 82%;  left: 4%; }
+  .node-ajio      { top: 91%;  left: 50%; }
+  .node-zepto     { top: 4%;   right: 2%; }
+  .node-blinkit   { top: 22%;  right: 1%; }
+  .node-instamart { top: 82%;  right: 4%; }
   .demo { padding: var(--sp-lg) var(--sp-xs); }
   .products-grid { grid-template-columns: 1fr 1fr; }
   .spec-grid { grid-template-columns: repeat(2, 1fr); }
@@ -781,4 +952,5 @@ footer {
 @media (max-width: 500px) {
   .products-grid { grid-template-columns: 1fr; }
   .spec-grid { grid-template-columns: 1fr; }
+  .hero-octopus-img { opacity: 0.65; width: 280px; }
 }
