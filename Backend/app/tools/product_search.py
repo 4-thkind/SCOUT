@@ -157,33 +157,14 @@ class ProductSearchTool:
         intent_type: IntentType,
     ) -> List:
         """
-        Choose which platforms to search based on intent type and user prefs.
-        Quick commerce queries skip e-commerce; vice versa.
-
-        Important: if the intent-based candidate list has ZERO enabled
-        platforms (e.g. the query was classified as a normal shopping query
-        but only a quick-commerce key like Blinkit is configured), fall back
-        to searching every enabled platform instead of returning nothing.
-        Without this, a correctly-configured key can still produce an empty
-        result purely because of how the message was classified.
+        Search ALL enabled platforms to ensure a highly diverse mix,
+        unless the user specifically included or excluded platforms.
         """
-        if intent_type == IntentType.QUICK_COMMERCE or intent.is_urgent:
-            candidates = _QUICK_COMMERCE_PLATFORMS
-        elif intent_type == IntentType.SHOPPING_QUERY:
-            # Fashion categories: skip quick commerce, add Myntra/Ajio
-            fashion_cats = {"fashion", "clothing", "shoes", "accessories", "beauty"}
-            if intent.category and intent.category.lower() in fashion_cats:
-                candidates = _ECOMMERCE_PLATFORMS
-            else:
-                # Electronics / general: Amazon + Flipkart + SerpAPI first,
-                # also include quick commerce if query_text suggests grocery
-                candidates = _ECOMMERCE_PLATFORMS
-        else:
-            candidates = _ALL_PLATFORMS
+        candidates = _ALL_PLATFORMS
 
         # Fallback: if nothing in the chosen bucket is actually enabled,
         # don't silently return an empty result — search whatever IS
-        # configured instead, across both buckets.
+        # configured instead.
         if not any(p.enabled for p in candidates):
             candidates = [p for p in _ALL_PLATFORMS if p.enabled]
 
