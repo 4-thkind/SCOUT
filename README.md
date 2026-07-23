@@ -1,9 +1,11 @@
 <div align="center">
 
 # SCOUT
+
 **Smart Commerce & Omnichannel Unified Tracker**
 
-[Live Deployment](https://scout-server.pages.dev/) | [Report a Bug](https://github.com/4-thkind/SCOUT/issues)
+[https://scout-server.pages.dev/]
+
 
 SCOUT is an intelligent shopping assistant that searches multiple e-commerce platforms simultaneously. It ranks results using a multi-factor scoring engine and streams a structured recommendation back to the client in real-time.
 
@@ -178,4 +180,8 @@ The system uses a modular plugin architecture for search platforms:
 
 <div align="center">
 Built by Utkarsh Singh and Granth Chabbra.
+</div>
+
+<div align="center">
+  <a href="https://github.com/4-thkind/SCOUT/issues">Report a Bug</a>
 </div>
