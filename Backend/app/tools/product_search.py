@@ -115,7 +115,7 @@ class ProductSearchTool:
         results = self._filter_relevance(results, intent.query_text)
 
         # Deduplicate by title similarity (crude but effective for MVP)
-        results = self._deduplicate(results)
+        results = self._deduplicate(results, intent)
 
         # Cache the raw results
         await self._cache.set(
@@ -203,26 +203,24 @@ class ProductSearchTool:
         return candidates[: settings.max_search_platforms]
 
     @staticmethod
-    def _deduplicate(products: List[Product]) -> List[Product]:
+    def _deduplicate(products: List[Product], intent: SearchIntent) -> List[Product]:
         """
         Remove near-duplicate titles from different platforms.
-        Keep the cheaper / better-rated one.
+        Keep the one with the highest rank score.
         """
+        from app.tools.product_ranker import ProductRanker
+        ranker = ProductRanker()
+        ranker.rank(products, intent)
+
         seen: Dict[str, Product] = {}
         for p in products:
             key = _title_fingerprint(p.title)
             if key not in seen:
                 seen[key] = p
             else:
-                # Keep the one with lower price (or higher rating on tie)
                 existing = seen[key]
-                if p.price.current < existing.price.current:
+                if (p.score or 0) > (existing.score or 0):
                     seen[key] = p
-                elif p.price.current == existing.price.current:
-                    p_rating = (p.review_summary.average_rating or 0) if p.review_summary else 0
-                    e_rating = (existing.review_summary.average_rating or 0) if existing.review_summary else 0
-                    if p_rating > e_rating:
-                        seen[key] = p
         return list(seen.values())
 
     @staticmethod
