@@ -88,30 +88,26 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-    Trigger["✨ Trigger: Webhook OR Scheduler"] --> Retriever["🔍 Retriever Agent"]
-    Retriever -- Fetched Code --> Analyzer["🧪 Analyzer Agent"]
-    Analyzer -- Findings & Issues --> Decision["⚖️ Decision Agent"]
-    Decision -- Prioritized Tasks --> Execution["⚡ Execution Agent"]
-    Execution -- Apply Fixes To Files --> Modified["📄 Modified Code"]
-    Modified --> Verifier["✅ Verifier Agent"]
-    Verifier -- Verified Results --> Monitor["📊 Monitor Agent"]
-    Monitor -- Health & Metrics --> Git["🚀 Git Service"]
-    Git -- Auto-Commit --> Committed["📦 Committed"]
-    Committed --> Pushed["📤 Pushed"]
+    Trigger["✨ Trigger: User Query"] --> Router["🧠 Intent Router Agent<br>(Claude)"]
+    Router -- 6 Intent Types --> Extractor["📝 Extraction Agent<br>(Claude)"]
+    Extractor -- JSON: Budget, Brand --> Search["🌐 Parallel Search Agent<br>(10+ Platforms)"]
+    Search -- Raw Products --> Dedup["🔍 Deduplication Agent"]
+    Dedup -- Unique Products --> Ranker["⚖️ 6-Factor Ranker Agent"]
+    Ranker -- Scored Results --> Summarizer["💬 Review Summarizer<br>(Claude)"]
+    Summarizer -- Pros & Cons --> Streamer["⚡ SSE Streaming Agent"]
+    Streamer -- Real-time Tokens --> Frontend["📱 Frontend / User"]
 
-    Audit[("🗄️ Full Audit Log - Every Decision")]
+    Cache[("🗄️ Redis Cache / Session Store")]
     
-    Trigger -. Log .-> Audit
-    Retriever -. Log .-> Audit
-    Analyzer -. Log .-> Audit
-    Decision -. Log .-> Audit
-    Execution -. Log .-> Audit
-    Modified -. Log .-> Audit
-    Verifier -. Log .-> Audit
-    Monitor -. Log .-> Audit
-    Git -. Log .-> Audit
+    Trigger -. Query Log .-> Cache
+    Router -. Intent State .-> Cache
+    Extractor -. Parameters .-> Cache
+    Search -. API Results .-> Cache
+    Dedup -. Filtered Set .-> Cache
+    Ranker -. Scores .-> Cache
+    Summarizer -. Generated Text .-> Cache
     
-    style Audit fill:#2e2e2e,stroke:#e69a0b,stroke-width:2px,color:#fff
+    style Cache fill:#2e2e2e,stroke:#e69a0b,stroke-width:2px,color:#fff
 ```
 
 ---
