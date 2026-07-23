@@ -23,7 +23,6 @@ settings = get_settings()
 # ── Registry of all platform integrations ────────────────────────────────────
 
 _ECOMMERCE_PLATFORMS = [
-    SerpAPIIntegration(),
     QuickCommerceIntegration("Amazon", Platform.AMAZON, PlatformType.ECOMMERCE),
     QuickCommerceIntegration("Flipkart", Platform.FLIPKART, PlatformType.ECOMMERCE),
     QuickCommerceIntegration("Myntra", Platform.MYNTRA, PlatformType.ECOMMERCE),
@@ -99,7 +98,7 @@ class ProductSearchTool:
 
         done, _ = await asyncio.wait(
             tasks.values(),
-            timeout=4.0,   # 4 s hard ceiling — no platform blocks the response
+            timeout=8.0,   # 8 s hard ceiling to accommodate slower APIs like Amazon
         )
 
         for platform_name, task in tasks.items():

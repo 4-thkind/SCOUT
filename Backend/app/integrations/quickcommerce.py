@@ -34,7 +34,7 @@ class QuickCommerceIntegration(BaseIntegration):
         self.qc_platform_name = qc_platform_name
         self.platform = platform_enum
         self.platform_type = platform_type
-        self._http = httpx.AsyncClient(timeout=3.5)
+        self._http = httpx.AsyncClient(timeout=8.0)
         
         self.enabled = bool(settings.quickcommerce_api_key and settings.quickcommerce_api_key != "ADD_API_HERE")
 
