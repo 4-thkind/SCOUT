@@ -287,6 +287,6 @@ The frontend's visual language — warm near-black canvas, a single disciplined 
 
 <div align="center">
 
-Built by [Utkarsh Singh](https://github.com/4-thkind) and [Granth Chabbra](https://github.com/granthx)
+Built by [Utkarsh Singh](https://github.com/4-thkind) and [Granth Chhabra](https://github.com/granthx)
 
 </div>
