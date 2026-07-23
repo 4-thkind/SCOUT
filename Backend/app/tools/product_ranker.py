@@ -68,7 +68,25 @@ class ProductRanker:
             product.score = round(score * 100, 1)
             product.score_breakdown = {k: round(v, 3) for k, v in breakdown.items()}
 
+        # Sort initially by raw score
         ranked = sorted(products, key=lambda p: p.score or 0, reverse=True)
+
+        # Apply platform fatigue penalty to interleave platforms
+        diverse_ranked = []
+        platform_counts = {}
+        for p in ranked:
+            plat = p.platform.value
+            count = platform_counts.get(plat, 0)
+            
+            # Deduct 8 points for every prior occurrence of this platform
+            adjusted_score = max(0.0, (p.score or 0) - (count * 8.0))
+            p.score = round(adjusted_score, 1)
+            
+            diverse_ranked.append(p)
+            platform_counts[plat] = count + 1
+            
+        # Re-sort based on the new adjusted scores
+        ranked = sorted(diverse_ranked, key=lambda p: p.score or 0, reverse=True)
 
         # Mark the top pick
         if ranked:
