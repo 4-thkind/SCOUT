@@ -104,7 +104,7 @@ function initChat() {
       console.error('Chat request failed:', err);
       const errorMsg = document.createElement('div');
       errorMsg.className = 'ai-reply body-md';
-      errorMsg.style.color = 'var(--primary)';
+      errorMsg.style.color = '#da291c';
       errorMsg.textContent = 'Error connecting to the backend API.';
       chatBody.appendChild(errorMsg);
     } finally {
@@ -190,6 +190,23 @@ function handleEvent(type, payload, thinkingRow, aiReply, chatBody) {
     }
     const cursor = aiReply.querySelector('.ai-cursor');
     if (cursor) cursor.remove();
+    document.querySelector('.chat-input').placeholder = 'Ask about any product…';
+  }
+  else if (type === 'error') {
+    if (!aiReply.parentNode) {
+      chatBody.appendChild(aiReply);
+    }
+    aiReply.style.display = 'block';
+    aiReply.style.color = '#da291c'; // Red error text
+    const textNode = document.createTextNode(`Error: ${data.data || data}`);
+    const cursor = aiReply.querySelector('.ai-cursor');
+    if (cursor) {
+      aiReply.insertBefore(textNode, cursor);
+      cursor.remove();
+    } else {
+      aiReply.appendChild(textNode);
+    }
+    document.querySelector('.chat-input').placeholder = 'Ask about any product…';
   }
 }
 
